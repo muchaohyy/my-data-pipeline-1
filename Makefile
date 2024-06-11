@@ -1,5 +1,8 @@
-AWS_PROFILE=jiangren12
+AWS_PROFILE=jiangren14
 ENVIRONMENT=dev
+
+deploy_default:
+	sls deploy --stage ${ENVIRONMENT} --verbose
 
 deploy:
 	sls deploy --aws-profile ${AWS_PROFILE} --stage ${ENVIRONMENT} --verbose

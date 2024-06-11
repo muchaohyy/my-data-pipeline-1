@@ -1,5 +1,5 @@
 service: ${env:APPLICATION}
-frameworkVersion: '3'
+frameworkVersion: '4'
 
 useDotenv: true
 variablesResolutionMode: 20210326
@@ -16,7 +16,7 @@ custom:
   dotenv:
     include:
       - TZ_LOCAL
-  dynamoDbTable: data_pipeline_dynamodb_table
+  dynamoDbTable: data_pipeline_1_dynamodb_table
   dynamoDbArn: !Join
                   - ''
                   - - 'arn:aws:dynamodb:'
@@ -27,11 +27,11 @@ custom:
                     - ${self:custom.dynamoDbTable}
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.10
   memorySize: 256
   timeout: 300
   deploymentBucket:
-    name: chaomu-jiangren12202302-deployment
+    name: jiangren14-chao-deployment
     maxPreviousDeploymentArtifacts: 3
   region: ${env:REGION}
   versionFunctions: true
@@ -43,7 +43,7 @@ provider:
         - s3:HeadObject
         - s3:GetObject
       Resource:
-        - arn:aws:s3:::chaomu-jiangrendata12-202302/*
+        - arn:aws:s3:::jiangren14-chao-dynamo/*
     - Effect: Allow
       Action: 
         - dynamodb:*
@@ -70,11 +70,11 @@ package:
 functions:
   dataPipeline:
     handler: data_pipeline.run
-    name: my_first_data_pipeline
+    name: my_first_data_pipeline_1
     description: "jiang ren data pipeline demo"
     events:
       - s3:
-          bucket: chaomu-jiangrendata12-202302
+          bucket: jiangren14-chao-dynamo
           event: s3:ObjectCreated:*
           rules:
             - prefix: csv/
