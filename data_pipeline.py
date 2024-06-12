@@ -38,4 +38,5 @@ def process_data(bucket, key, file):
                 )
     
 def s3get(bucket, key, file):
+    print(f"Download {file} to local")
     s3.Object(bucket, key).download_file(file)

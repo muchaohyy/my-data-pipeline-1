@@ -16,7 +16,7 @@ custom:
   dotenv:
     include:
       - TZ_LOCAL
-  dynamoDbTable: data_pipeline_1_dynamodb_table
+  dynamoDbTable: data_pipeline_dynamodb_table
   dynamoDbArn: !Join
                   - ''
                   - - 'arn:aws:dynamodb:'
@@ -31,7 +31,7 @@ provider:
   memorySize: 256
   timeout: 300
   deploymentBucket:
-    name: jiangren14-chao-deployment
+    name: ${env:DEPLOYMENT_BUCKET}
     maxPreviousDeploymentArtifacts: 3
   region: ${env:REGION}
   versionFunctions: true
@@ -40,10 +40,8 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - s3:HeadObject
-        - s3:GetObject
-      Resource:
-        - arn:aws:s3:::jiangren14-chao-dynamo/*
+        - s3:*
+      Resource: "*"
     - Effect: Allow
       Action: 
         - dynamodb:*
@@ -70,15 +68,14 @@ package:
 functions:
   dataPipeline:
     handler: data_pipeline.run
-    name: my_first_data_pipeline_1
+    name: my_first_data_pipeline
     description: "jiang ren data pipeline demo"
     events:
       - s3:
-          bucket: jiangren14-chao-dynamo
+          bucket: ${env:EVENT_BUCKET}
           event: s3:ObjectCreated:*
           rules:
             - prefix: csv/
-          existing: true
 
 # you can add CloudFormation resource templates here
 resources:
